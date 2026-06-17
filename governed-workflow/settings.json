@@ -1,0 +1,121 @@
+{
+  "permissions": {
+    "deny": [
+      "Bash(rm -rf *)",
+      "Bash(rm -r *)",
+      "Bash(rm -fr *)",
+      "Bash(find * -delete*)",
+      "Bash(find * -exec rm*)",
+      "Bash(git clean -fd*)",
+      "Bash(git clean -ffd*)",
+      "Bash(git clean -fdx*)",
+      "Bash(git reset --hard*)",
+      "Bash(git push --force*)",
+      "Bash(git push -f *)",
+      "Bash(git push --force-with-lease*)",
+      "Bash(npm publish*)",
+      "Bash(pnpm publish*)",
+      "Bash(yarn publish*)",
+      "Bash(npx release*)",
+      "Bash(curl * | bash*)",
+      "Bash(curl * | sh*)",
+      "Bash(wget * | bash*)",
+      "Bash(wget * | sh*)",
+      "Bash(bash -c *)",
+      "Bash(sh -c *)",
+      "Bash(eval *)",
+      "Bash(xargs rm*)",
+      "Bash(terraform apply*)",
+      "Bash(terraform destroy*)",
+      "Bash(pulumi up*)",
+      "Bash(pulumi destroy*)",
+      "Bash(kubectl apply*)",
+      "Bash(kubectl delete*)",
+      "Bash(helm upgrade*)",
+      "Bash(helm uninstall*)",
+      "Bash(helm install*)",
+      "Bash(aws iam *)",
+      "Bash(aws s3 rm*)",
+      "Bash(aws s3api delete*)",
+      "Bash(aws ec2 terminate*)",
+      "Bash(aws rds delete*)",
+      "Bash(gcloud iam *)",
+      "Bash(gcloud projects delete*)",
+      "Bash(az role *)",
+      "Bash(az ad *)",
+      "Bash(* --dangerously-skip-permissions*)",
+      "Bash(* --no-verify*)",
+      "PowerShell(Remove-Item *-Recurse*)",
+      "PowerShell(Remove-Item *-Force*)",
+      "PowerShell(rm -r *)",
+      "PowerShell(rm -rf *)",
+      "PowerShell(rmdir *-Recurse*)",
+      "PowerShell(Invoke-Expression *)",
+      "PowerShell(iex *)",
+      "PowerShell(*| iex*)",
+      "PowerShell(*| Invoke-Expression*)",
+      "PowerShell(Invoke-WebRequest * | iex*)",
+      "PowerShell(iwr * | iex*)",
+      "PowerShell(curl * | iex*)",
+      "PowerShell(git push --force*)",
+      "PowerShell(git push -f *)",
+      "PowerShell(git reset --hard*)",
+      "PowerShell(git clean -fd*)",
+      "PowerShell(npm publish*)",
+      "PowerShell(pnpm publish*)",
+      "PowerShell(yarn publish*)",
+      "PowerShell(terraform apply*)",
+      "PowerShell(terraform destroy*)",
+      "PowerShell(kubectl apply*)",
+      "PowerShell(kubectl delete*)",
+      "PowerShell(aws iam *)",
+      "PowerShell(aws s3 rm*)",
+      "PowerShell(gcloud iam *)",
+      "PowerShell(az role *)",
+      "PowerShell(* --dangerously-skip-permissions*)",
+      "PowerShell(* --no-verify*)"
+    ]
+  },
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell -NoProfile -ExecutionPolicy Bypass -File \"%USERPROFILE%\\.claude\\hooks\\sentinel-watch.ps1\""
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash|PowerShell",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell -NoProfile -ExecutionPolicy Bypass -File \"%USERPROFILE%\\.claude\\hooks\\push-guard.ps1\""
+          }
+        ]
+      },
+      {
+        "matcher": "Read|Edit|Write|MultiEdit|NotebookEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell -NoProfile -ExecutionPolicy Bypass -File \"%USERPROFILE%\\.claude\\hooks\\secrets-guard.ps1\""
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell -NoProfile -ExecutionPolicy Bypass -File \"%USERPROFILE%\\.claude\\hooks\\session-audit.ps1\""
+          }
+        ]
+      }
+    ]
+  }
+}
