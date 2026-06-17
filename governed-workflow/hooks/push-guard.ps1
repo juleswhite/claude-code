@@ -20,6 +20,14 @@ try {
 
     $lower = $cmd.ToLower()
 
+    # Fast path: gh subcommands that carry markdown bodies (PR/issue/release/gist
+    # create|edit|comment|review) can't *be* a git push, but their --body / heredoc
+    # content frequently mentions "git push" in code spans / examples. Skip cleanly
+    # rather than relying on regex anchoring to distinguish prose from invocation.
+    if ($lower -match '^\s*gh\s+(pr|issue|release|gist)\s+(create|edit|comment|review)\b') {
+        exit 0
+    }
+
     # Catch evasion attempts even if the deny-list missed them.
     # Anchor on start-of-command or shell separator so commit-message bodies that
     # merely mention "git push" don't false-positive.
